@@ -5,123 +5,951 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blessy Thomas - AI Portfolio</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --bg-primary: #0f0f0f; --bg-secondary: #1a1a1a; --bg-tertiary: #242424;
-            --text-primary: #e8e8e8; --text-secondary: #a0a0a0;
-            --accent-primary: #00d4ff; --accent-secondary: #7b2ff7; --accent-tertiary: #ff006e;
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #242424;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7b2ff7;
+            --accent-tertiary: #ff006e;
             --border-color: #2a2a2a;
             --glow: 0 0 20px rgba(0, 212, 255, 0.3);
             --glow-hover: 0 0 30px rgba(0, 212, 255, 0.5);
         }
+
         [data-theme="light"] {
-            --bg-primary: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
-            --text-primary: #1a1a1a; --text-secondary: #666666;
-            --accent-primary: #0066cc; --accent-secondary: #6b21a8; --accent-tertiary: #dc004e;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent-primary: #0066cc;
+            --accent-secondary: #6b21a8;
+            --accent-tertiary: #dc004e;
             --border-color: #d0d0d0;
             --glow: 0 0 20px rgba(0, 102, 204, 0.2);
             --glow-hover: 0 0 30px rgba(0, 102, 204, 0.4);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; transition: all 0.3s ease; }
-        .container { display: flex; height: 100vh; position: relative; }
-        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.03; }
-        .particle { position: absolute; border-radius: 50%; animation: float linear infinite; }
-        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
-        .sidebar { width: 320px; background: var(--bg-secondary); border-right: 1px solid var(--border-color); padding: 30px 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative; z-index: 10; transition: transform 0.3s ease; }
-        .sidebar.collapsed { transform: translateX(-100%); }
-        .profile { text-align: center; margin-bottom: 30px; animation: slideDown 0.6s ease; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 48px; font-weight: bold; color: white; position: relative; box-shadow: var(--glow); animation: pulse 3s ease-in-out infinite; }
-        @keyframes pulse { 0%, 100% { box-shadow: var(--glow); } 50% { box-shadow: var(--glow-hover); } }
-        .status-indicator { width: 16px; height: 16px; background: #00ff88; border-radius: 50%; position: absolute; bottom: 8px; right: 8px; border: 3px solid var(--bg-secondary); animation: blink 2s ease-in-out infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .profile h2 { font-size: 24px; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .profile p { color: var(--text-secondary); font-size: 14px; margin-bottom: 15px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .stat-card { background: var(--bg-tertiary); padding: 15px 10px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); transition: all 0.3s ease; }
-        .stat-card:hover { transform: translateY(-3px); border-color: var(--accent-primary); box-shadow: var(--glow); }
-        .stat-number { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 5px; }
-        .section-title { font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin: 25px 0 15px; letter-spacing: 1px; font-weight: 600; }
-        .link-btn { display: flex; align-items: center; padding: 14px 16px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: var(--text-primary); position: relative; overflow: hidden; }
-        .link-btn:hover { background: var(--accent-primary); color: var(--bg-primary); transform: translateX(8px); border-color: var(--accent-primary); box-shadow: var(--glow); }
-        .link-btn svg { width: 20px; height: 20px; margin-right: 12px; transition: transform 0.3s ease; }
-        .timeline-section { margin-top: 20px; }
-        .timeline-item { position: relative; padding-left: 30px; padding-bottom: 25px; border-left: 2px solid var(--border-color); cursor: pointer; transition: all 0.3s ease; }
-        .timeline-item:last-child { border-left-color: transparent; }
-        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 0 10px var(--accent-primary); transition: all 0.3s ease; }
-        .timeline-item:hover::before { transform: scale(1.5); box-shadow: 0 0 20px var(--accent-primary); }
-        .timeline-item:hover { border-left-color: var(--accent-primary); }
-        .timeline-year { font-size: 13px; color: var(--accent-primary); font-weight: 600; margin-bottom: 5px; }
-        .timeline-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-        .timeline-company { font-size: 12px; color: var(--text-secondary); }
-        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 10; }
-        .header { padding: 20px 30px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .menu-toggle { display: none; background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; cursor: pointer; }
-        .header h1 { font-size: 24px; display: flex; align-items: center; gap: 12px; }
-        .ai-badge { font-size: 11px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; padding: 6px 12px; border-radius: 16px; font-weight: 600; animation: shimmer 3s ease-in-out infinite; }
-        @keyframes shimmer { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .header-controls { display: flex; gap: 10px; }
-        .control-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; font-size: 14px; }
-        .control-btn:hover { background: var(--accent-primary); color: var(--bg-primary); transform: translateY(-2px); box-shadow: var(--glow); }
-        .chat-container { flex: 1; overflow-y: auto; padding: 30px; scroll-behavior: smooth; }
-        .welcome-screen { text-align: center; padding: 40px 20px; max-width: 900px; margin: 0 auto; animation: fadeIn 0.6s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .welcome-screen h2 { font-size: 42px; margin-bottom: 15px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
-        .feature-card { background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 25px 20px; border-radius: 16px; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
-        .feature-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--accent-primary); box-shadow: var(--glow-hover); }
-        .feature-icon { font-size: 32px; margin-bottom: 15px; display: block; }
-        .workflow-section { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; margin: 30px 0; position: relative; overflow: hidden; }
-        .workflow-section::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%); animation: rotate 20s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .workflow-title { font-size: 24px; margin-bottom: 25px; text-align: center; position: relative; z-index: 1; }
-        .workflow-nodes { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; position: relative; z-index: 1; }
-        .workflow-node { background: var(--bg-tertiary); border: 2px solid var(--accent-primary); border-radius: 16px; padding: 20px; text-align: center; min-width: 140px; transition: all 0.3s ease; position: relative; animation: nodeFloat 3s ease-in-out infinite; }
-        .workflow-node:hover { transform: scale(1.1); box-shadow: var(--glow-hover); }
-        .workflow-arrow { color: var(--accent-primary); font-size: 24px; animation: arrowPulse 2s ease-in-out infinite; }
-        @keyframes arrowPulse { 0%, 100% { opacity: 0.3; transform: translateX(0); } 50% { opacity: 1; transform: translateX(5px); } }
-        .message { margin-bottom: 25px; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .message-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
-        .user-avatar { background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary)); color: white; }
-        .ai-avatar { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; animation: avatarGlow 3s ease-in-out infinite; }
-        .message-content { padding: 18px 22px; border-radius: 16px; margin-left: 48px; line-height: 1.7; position: relative; }
-        .user-message .message-content { background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(123, 47, 247, 0.1)); border: 1px solid rgba(255, 0, 110, 0.3); }
-        .ai-message .message-content { background: var(--bg-secondary); border: 1px solid var(--border-color); }
-        .sources { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .source-tag { background: var(--bg-tertiary); padding: 6px 12px; border-radius: 16px; font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); transition: all 0.3s ease; display: inline-block; margin-right: 5px; margin-bottom: 5px; }
-        .input-container { padding: 20px 30px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); }
-        .input-wrapper { max-width: 900px; margin: 0 auto; position: relative; }
-        .input-box { width: 100%; padding: 18px 120px 18px 20px; border: 2px solid var(--border-color); border-radius: 24px; background: var(--bg-tertiary); color: var(--text-primary); font-size: 15px; resize: none; outline: none; transition: all 0.3s ease; font-family: inherit; }
-        .input-box:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1); }
-        .input-actions { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px; }
-        .action-btn { background: var(--bg-primary); border: 1px solid var(--border-color); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        .action-btn:hover { background: var(--accent-primary); color: var(--bg-primary); transform: scale(1.1); box-shadow: var(--glow); }
-        .send-btn { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: none; color: white; }
-        .typing-indicator { display: flex; gap: 5px; padding: 18px 22px; margin-left: 48px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 16px; width: fit-content; }
-        .typing-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary); animation: typing 1.4s infinite; }
-        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-12px); opacity: 1; } }
-        @media (max-width: 968px) { .sidebar { position: fixed; left: 0; top: 0; height: 100vh; z-index: 100; box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3); } .menu-toggle { display: flex; } .chat-container { padding: 20px 15px; } .feature-grid { grid-template-columns: 1fr; } .workflow-nodes { flex-direction: column; } .workflow-arrow { transform: rotate(90deg); } }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.03;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            box-shadow: var(--glow);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: var(--glow);
+            }
+            50% {
+                box-shadow: var(--glow-hover);
+            }
+        }
+
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            background: #00ff88;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            border: 3px solid var(--bg-secondary);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .profile h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            padding: 15px 10px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin: 25px 0 15px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .link-btn:hover::before {
+            left: 100%;
+        }
+
+        .link-btn:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: translateX(8px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow);
+        }
+
+        .link-btn svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .link-btn:hover svg {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Timeline */
+        .timeline-section {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 25px;
+            border-left: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:last-child {
+            border-left-color: transparent;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover::before {
+            transform: scale(1.5);
+            box-shadow: 0 0 20px var(--accent-primary);
+        }
+
+        .timeline-item:hover {
+            border-left-color: var(--accent-primary);
+        }
+
+        .timeline-year {
+            font-size: 13px;
+            color: var(--accent-primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .timeline-company {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            padding: 20px 30px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-badge {
+            font-size: 11px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: 600;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .control-btn:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--glow);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            scroll-behavior: smooth;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-screen h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-screen p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Interactive Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 25px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-hover);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-card h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* N8N Workflow Visualization */
+        .workflow-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .workflow-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .workflow-nodes {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .workflow-node {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            min-width: 140px;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: nodeFloat 3s ease-in-out infinite;
+        }
+
+        .workflow-node:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .workflow-node:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .workflow-node:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes nodeFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .workflow-node:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow-hover);
+        }
+
+        .workflow-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .workflow-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .workflow-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .workflow-arrow {
+            color: var(--accent-primary);
+            font-size: 24px;
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateX(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(5px);
+            }
+        }
+
+        /* Messages */
+        .message {
+            margin-bottom: 25px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary));
+            color: white;
+        }
+
+        .ai-avatar {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            animation: avatarGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+            }
+        }
+
+        .message-content {
+            padding: 18px 22px;
+            border-radius: 16px;
+            margin-left: 48px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(123, 47, 247, 0.1));
+            border: 1px solid rgba(255, 0, 110, 0.3);
+        }
+
+        .ai-message .message-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .sources {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sources h4 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .source-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .source-tag {
+            background: var(--bg-tertiary);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .source-tag:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: scale(1.05);
+        }
+
+        /* Input */
+        .input-container {
+            padding: 20px 30px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 18px 120px 18px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: scale(1.1);
+            box-shadow: var(--glow);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            color: white;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 18px 22px;
+            margin-left: 48px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-12px);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 100;
+                box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .chat-container {
+                padding: 20px 15px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-nodes {
+                flex-direction: column;
+            }
+
+            .workflow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
     </style>
 </head>
 <body data-theme="dark">
+    <!-- Animated Background -->
     <div class="bg-animation" id="bgAnimation"></div>
+
     <div class="container">
         <div class="sidebar" id="sidebar">
             <div class="profile">
-                <div class="profile-img">BT<div class="status-indicator"></div></div>
+                <div class="profile-img">
+                    BT
+                    <div class="status-indicator"></div>
+                </div>
                 <h2>Blessy Thomas</h2>
                 <p>AI/ML Engineer & Developer</p>
+                
                 <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-number">2+</div><div class="stat-label">Years Exp</div></div>
-                    <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Projects</div></div>
-                    <div class="stat-card"><div class="stat-number">9+</div><div class="stat-label">Certs</div></div>
+                    <div class="stat-card">
+                        <div class="stat-number">2+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">9+</div>
+                        <div class="stat-label">Certifications</div>
+                    </div>
                 </div>
             </div>
 
@@ -149,299 +977,776 @@
                 </div>
             </div>
 
-            <div class="section-title">AI Projects</div>
-            <div class="timeline-section">
-                <div class="timeline-item" onclick="askQuestion('Tell me about DSA Quest')">
-                    <div class="timeline-year">Agentic AI</div>
-                    <div class="timeline-title">DSA Quest</div>
-                    <div class="timeline-company">LangGraph + Streamlit</div>
-                </div>
-                <div class="timeline-item" onclick="askQuestion('Tell me about ChemIntelliGraph')">
-                    <div class="timeline-year">RAG Framework</div>
-                    <div class="timeline-title">ChemIntelliGraph</div>
-                    <div class="timeline-company">Multi-Agent System</div>
-                </div>
-                <div class="timeline-item" onclick="askQuestion('Tell me about Chemixtry RAG Lab')">
-                    <div class="timeline-year">Virtual Lab</div>
-                    <div class="timeline-title">Chemixtry RAG Lab</div>
-                    <div class="timeline-company">Multimodal RAG</div>
-                </div>
-            </div>
-
             <div class="section-title">Connect</div>
-            <a href="mailto:blessy456bthomas@gmail.com" class="link-btn"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>Email</a>
-            <a href="https://linkedin.com/in/blessythomas456b" class="link-btn" target="_blank"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>LinkedIn</a>
-            <a href="https://github.com/Blessy456b" class="link-btn" target="_blank"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>GitHub</a>
+            <a href="mailto:blessy456bthomas@gmail.com" class="link-btn">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                Email
+            </a>
+            <a href="https://linkedin.com/in/blessythomas456b" class="link-btn" target="_blank">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+                LinkedIn
+            </a>
+            <a href="https://github.com/Blessy456b" class="link-btn" target="_blank">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                </svg>
+                GitHub
+            </a>
+            <a href="tel:945-250-6703" class="link-btn">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                Phone
+            </a>
         </div>
-<div class="main-content">
-    <div class="header">
-        <div class="header-left">
-            <button class="menu-toggle" onclick="toggleSidebar()"><svg width="20" height="20" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-                </svg></button>
-            <h1>AI Portfolio Assistant <span class="ai-badge">✨ AI-Powered</span></h1>
-        </div>
-        <div class="header-controls">
-            <button class="control-btn" onclick="clearChat()"><svg width="18" height="18" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                </svg>Clear</button>
-            <button class="control-btn" onclick="toggleTheme()"><svg width="18" height="18" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>Theme</button>
-        </div>
-    </div>
 
-    <div class="chat-container" id="chatContainer">
-        <div class="welcome-screen" id="welcomeScreen">
-            <h2>👋 Welcome to Blessy's AI Portfolio</h2>
-            <p>Powered by IBM RAG Architecture & N8N Automation Workflow</p>
-            <div class="workflow-section">
-                <div class="workflow-title">🔄 AI Processing Workflow</div>
-                <div class="workflow-nodes">
-                    <div class="workflow-node">
-                        <div class="workflow-icon">💬</div>
-                        <div class="workflow-label">User Query</div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                    </button>
+                    <h1>
+                        AI Portfolio Assistant
+                        <span class="ai-badge">✨ AI-Powered</span>
+                    </h1>
+                </div>
+                <div class="header-controls">
+                    <button class="control-btn" onclick="clearChat()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                        Clear
+                    </button>
+                    <button class="control-btn" onclick="toggleTheme()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Theme
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <h2>👋 Welcome to Blessy's AI Portfolio</h2>
+                    <p>Powered by IBM RAG Architecture & N8N Automation Workflow</p>
+                    
+                    <!-- N8N Workflow Visualization -->
+                    <div class="workflow-section">
+                        <div class="workflow-title">🔄 AI Processing Workflow</div>
+                        <div class="workflow-nodes">
+                            <div class="workflow-node">
+                                <div class="workflow-icon">💬</div>
+                                <div class="workflow-label">User Query</div>
+                                <div class="workflow-desc">Natural Language</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">🧠</div>
+                                <div class="workflow-label">IBM RAG</div>
+                                <div class="workflow-desc">Context Retrieval</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">⚡</div>
+                                <div class="workflow-label">N8N Process</div>
+                                <div class="workflow-desc">Automation Layer</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">✨</div>
+                                <div class="workflow-label">AI Response</div>
+                                <div class="workflow-desc">Smart Answer</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="workflow-arrow">→</div>
-                    <div class="workflow-node">
-                        <div class="workflow-icon">🧠</div>
-                        <div class="workflow-label">IBM RAG</div>
-                    </div>
-                    <div class="workflow-arrow">→</div>
-                    <div class="workflow-node">
-                        <div class="workflow-icon">⚡</div>
-                        <div class="workflow-label">N8N Process</div>
-                    </div>
-                    <div class="workflow-arrow">→</div>
-                    <div class="workflow-node">
-                        <div class="workflow-icon">✨</div>
-                        <div class="workflow-label">AI Response</div>
+
+                    <div class="feature-grid">
+                        <div class="feature-card" onclick="askQuestion('What are Blessy\'s technical skills?')">
+                            <span class="feature-icon">💻</span>
+                            <h4>Technical Skills</h4>
+                            <p>AI/ML, Computer Vision, DevOps</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Show me the experience timeline')">
+                            <span class="feature-icon">📊</span>
+                            <h4>Experience Timeline</h4>
+                            <p>2+ years across top organizations</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('What AI projects has Blessy worked on?')">
+                            <span class="feature-icon">🤖</span>
+                            <h4>AI Projects</h4>
+                            <p>Computer Vision & Edge AI</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Tell me about certifications')">
+                            <span class="feature-icon">🏆</span>
+                            <h4>Certifications</h4>
+                            <p>Oracle, NVIDIA, OpenCV</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('What about Docker and Kubernetes?')">
+                            <span class="feature-icon">🐳</span>
+                            <h4>DevOps Stack</h4>
+                            <p>Docker, Kubernetes, CI/CD</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Show me education background')">
+                            <span class="feature-icon">🎓</span>
+                            <h4>Education</h4>
+                            <p>B.Tech ECE, CGPA 8.94</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="feature-grid">
-                <div class="feature-card" onclick="askQuestion('What are Blessy\'s technical skills?')"><span
-                        class="feature-icon">💻</span>
-                    <h4>Technical Skills</h4>
-                    <p>AI/ML, Computer Vision, DevOps</p>
-                </div>
-                <div class="feature-card" onclick="askQuestion('Show me the experience timeline')"><span
-                        class="feature-icon">📊</span>
-                    <h4>Experience Timeline</h4>
-                    <p>2+ years across top organizations</p>
-                </div>
-                <div class="feature-card" onclick="askQuestion('Tell me about DSA Quest')"><span
-                        class="feature-icon">🎮</span>
-                    <h4>DSA Quest</h4>
-                    <p>Agentic AI Learning Platform</p>
-                </div>
-                <div class="feature-card" onclick="askQuestion('Tell me about ChemIntelliGraph')"><span
-                        class="feature-icon">🧪</span>
-                    <h4>ChemIntelliGraph</h4>
-                    <p>RAG Framework for Chemistry</p>
-                </div>
-                <div class="feature-card" onclick="askQuestion('What about Docker and Kubernetes?')"><span
-                        class="feature-icon">🐳</span>
-                    <h4>DevOps Stack</h4>
-                    <p>Docker, Kubernetes, CI/CD</p>
-                </div>
-                <div class="feature-card" onclick="askQuestion('Show me education background')"><span
-                        class="feature-icon">🎓</span>
-                    <h4>Education</h4>
-                    <p>B.Tech ECE, CGPA 8.94</p>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        class="input-box" 
+                        id="userInput" 
+                        placeholder="Ask anything about experience, skills, projects, or timeline..."
+                        rows="1"
+                        onkeydown="handleKeyPress(event)"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="action-btn" onclick="generateRandomQuestion()" title="Random Question">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn send-btn" onclick="sendMessage()" id="sendBtn">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="input-container">
-        <div class="input-wrapper">
-            <textarea class="input-box" id="userInput"
-                placeholder="Ask anything about experience, skills, projects, or timeline..." rows="1"
-                onkeydown="handleKeyPress(event)"></textarea>
-            <div class="input-actions">
-                <button class="action-btn" onclick="generateRandomQuestion()" title="Random Question"><svg width="18"
-                        height="18" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-                    </svg></button>
-                <button class="action-btn send-btn" onclick="sendMessage()" id="sendBtn"><svg width="18" height="18"
-                        fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                    </svg></button>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    function createParticles() {
-        const bgAnimation = document.getElementById('bgAnimation');
-        for (let i = 0; i < 30; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.width = (Math.random() * 4 + 2) + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particle.style.background = `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`;
-            bgAnimation.appendChild(particle);
+    <script>
+        // Create animated background particles
+        function createParticles() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.background = `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`;
+                bgAnimation.appendChild(particle);
+            }
         }
-    }
-    createParticles();
 
-    function toggleTheme() {
-        const body = document.body;
-        body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-    }
+        createParticles();
 
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-    }
+        const resumeData = {
+            name: "Blessy Thomas",
+            contact: {
+                phone: "945-250-6703",
+                email: "blessy456bthomas@gmail.com",
+                linkedin: "linkedin.com/in/blessythomas456b",
+                github: "github.com/Blessy456b"
+            },
+            summary: "Oracle certified Generative AI and Autonomous database management professional with experience in Docker, Kubernetes, AI, and Computer Vision implementations on Edge Devices.",
+            education: {
+                degree: "Bachelor of Technology in Electronics & Communication Engineering",
+                university: "Central University of Karnataka",
+                duration: "2018 - 2022",
+                cgpa: "8.94",
+                graduationYear: 2022
+            },
+            experience: [
+                {
+                    title: "Project Engineer - AIML, Data and Analytics",
+                    company: "CDAC",
+                    duration: "Oct 2024 - Present",
+                    year: "2024",
+                    description: "Working on PostgreSQL contributions, bug identification, and logical replication patches"
+                },
+                {
+                    title: "Junior Research Assistant Fellow",
+                    company: "IIT Hyderabad (TiHAN)",
+                    duration: "Oct 2023 - Aug 2024",
+                    year: "2023-2024",
+                    description: "Computer Vision on Qualcomm RB5, Jetson Nano, Edge AI, Docker & Kubernetes"
+                },
+                {
+                    title: "Software Developer Trainee",
+                    company: "KKMSoft & DDUGKY",
+                    duration: "Dec 2022 - Aug 2023",
+                    year: "2022-2023",
+                    description: "Full-stack web development with ASP.NET, C#, and MSSQL"
+                }
+            ],
+            skills: {
+                ai: ["TensorFlow", "PyTorch", "OpenCV", "YOLO", "Qualcomm Neural SDK"],
+                devops: ["Docker", "Kubernetes", "CI/CD"],
+                database: ["Oracle", "MSSQL", "PostgreSQL"],
+                languages: ["C++", "Python", "C#", "Java", "JavaScript"],
+                web: ["ASP.NET", "HTML", "CSS", "Bootstrap"]
+            },
+            certifications: [
+                "Oracle Cloud Infrastructure 2024 Generative AI Professional",
+                "OpenCV Tensor KerasFlow Bootcamp",
+                "NVIDIA Getting Started with AI on Jetson Nano",
+                "NVIDIA Video AI Applications at the Edge",
+                "Oracle Autonomous Database Cloud 2023",
+                "Docker and Kubernetes - Udemy"
+            ]
+        };
 
-    function clearChat() {
-        document.getElementById('chatContainer').innerHTML = document.getElementById('welcomeScreen').outerHTML;
-        // Re-attach event listeners if needed (onclicks are inline so it's fine)
-        // Actually, innerHTML destroys the original element, so we need to reconstruct it or clone it.
-        // Simpler: reload page or just re-insert the HTML string.
-        location.reload(); // Easiest way to reset state
-    }
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+        }
 
-    function generateRandomQuestion() {
-        const questions = [
-            "What are Blessy's technical skills?", "Tell me about DSA Quest", "What AI certifications does Blessy have?",
-            "Show me the experience timeline year-wise", "Tell me about ChemIntelliGraph", "What is the current role at CDAC?"
-        ];
-        document.getElementById('userInput').value = questions[Math.floor(Math.random() * questions.length)];
-        sendMessage();
-    }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
 
-    function askQuestion(question) {
-        document.getElementById('userInput').value = question;
-        sendMessage();
-    }
+        function clearChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = `
+                <div class="welcome-screen" id="welcomeScreen">
+                    <h2>👋 Welcome to Blessy's AI Portfolio</h2>
+                    <p>Powered by IBM RAG Architecture & N8N Automation Workflow</p>
+                    
+                    <div class="workflow-section">
+                        <div class="workflow-title">🔄 AI Processing Workflow</div>
+                        <div class="workflow-nodes">
+                            <div class="workflow-node">
+                                <div class="workflow-icon">💬</div>
+                                <div class="workflow-label">User Query</div>
+                                <div class="workflow-desc">Natural Language</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">🧠</div>
+                                <div class="workflow-label">IBM RAG</div>
+                                <div class="workflow-desc">Context Retrieval</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">⚡</div>
+                                <div class="workflow-label">N8N Process</div>
+                                <div class="workflow-desc">Automation Layer</div>
+                            </div>
+                            <div class="workflow-arrow">→</div>
+                            <div class="workflow-node">
+                                <div class="workflow-icon">✨</div>
+                                <div class="workflow-label">AI Response</div>
+                                <div class="workflow-desc">Smart Answer</div>
+                            </div>
+                        </div>
+                    </div>
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
+                    <div class="feature-grid">
+                        <div class="feature-card" onclick="askQuestion('What are Blessy\\'s technical skills?')">
+                            <span class="feature-icon">💻</span>
+                            <h4>Technical Skills</h4>
+                            <p>AI/ML, Computer Vision, DevOps</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Show me the experience timeline')">
+                            <span class="feature-icon">📊</span>
+                            <h4>Experience Timeline</h4>
+                            <p>2+ years across top organizations</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('What AI projects has Blessy worked on?')">
+                            <span class="feature-icon">🤖</span>
+                            <h4>AI Projects</h4>
+                            <p>Computer Vision & Edge AI</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Tell me about certifications')">
+                            <span class="feature-icon">🏆</span>
+                            <h4>Certifications</h4>
+                            <p>Oracle, NVIDIA, OpenCV</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('What about Docker and Kubernetes?')">
+                            <span class="feature-icon">🐳</span>
+                            <h4>DevOps Stack</h4>
+                            <p>Docker, Kubernetes, CI/CD</p>
+                        </div>
+                        <div class="feature-card" onclick="askQuestion('Show me education background')">
+                            <span class="feature-icon">🎓</span>
+                            <h4>Education</h4>
+                            <p>B.Tech ECE, CGPA 8.94</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateRandomQuestion() {
+            const questions = [
+                "What are Blessy's technical skills?",
+                "Tell me about IIT Hyderabad experience",
+                "What AI certifications does Blessy have?",
+                "Show me the experience timeline year-wise",
+                "What Docker and Kubernetes projects?",
+                "Tell me about computer vision projects",
+                "What is the current role at CDAC?",
+                "Show education background"
+            ];
+            const randomQ = questions[Math.floor(Math.random() * questions.length)];
+            document.getElementById('userInput').value = randomQ;
             sendMessage();
         }
-    }
 
-    function sendMessage() {
-        const input = document.getElementById('userInput');
-        const question = input.value.trim();
-        if (!question) return;
-
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        if (welcomeScreen) welcomeScreen.style.display = 'none';
-
-        addMessage(question, 'user');
-        input.value = '';
-        input.style.height = 'auto';
-
-        showTypingIndicator();
-        setTimeout(() => {
-            hideTypingIndicator();
-            const answer = generateAnswer(question);
-            addMessage(answer.text, 'ai', answer.sources);
-        }, 1000);
-    }
-
-    function addMessage(text, type, sources = []) {
-        const chatContainer = document.getElementById('chatContainer');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}-message`;
-        const avatar = type === 'user' ? '<div class="avatar user-avatar">YOU</div>' : '<div class="avatar ai-avatar">AI</div>';
-        const sourcesHTML = sources.length > 0 ? `<div class="sources"><h4>📚 Data Sources</h4><div class="source-tags">${sources.map(s => `<span class="source-tag">${s}</span>`).join('')}</div></div>` : '';
-        messageDiv.innerHTML = `<div class="message-header">${avatar}<strong>${type === 'user' ? 'You' : 'AI Assistant'}</strong></div><div class="message-content">${text}${sourcesHTML}</div>`;
-        chatContainer.appendChild(messageDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-        const chatContainer = document.getElementById('chatContainer');
-        const typingDiv = document.createElement('div');
-        typingDiv.id = 'typingIndicator';
-        typingDiv.className = 'message ai-message';
-        typingDiv.innerHTML = `<div class="message-header"><div class="avatar ai-avatar">AI</div><strong>AI Assistant</strong></div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-        chatContainer.appendChild(typingDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-
-    function generateAnswer(question) {
-        const q = question.toLowerCase();
-
-        if (q.includes('dsa quest') || q.includes('dsa')) {
-            return {
-                text: `<strong>🎮 DSA Quest – Gamified Multi-Agent Coding Learning Platform</strong><br><br><strong>Tech Stack:</strong> LangGraph, Streamlit, Multi-Agent Reasoning, LLM APIs<br><br>• Production-grade agentic learning platform for DSA.<br>• <strong>Features:</strong><br>- AI story generation for code memorization.<br>- Multi-agent pipeline for code analysis, debugging, and evaluation.<br>- 4 Game modes: Quiz, Rearrange, etc.<br>- Interactive UI with Supabase authentication.<br>- Auto-grading logic and real-time feedback.`,
-                sources: ['GitHub: DSA-Quest', 'Agentic AI', 'LangGraph']
-            };
-        }
-        if (q.includes('chemintelligraph') || q.includes('chemistry')) {
-            return {
-                text: `<strong>🧪 ChemIntelliGraph – Agentic RAG Framework</strong><br><br><strong>Tech Stack:</strong> LangGraph, RAG, ChromaDB, Streamlit, SerpAI, MCP<br><br>• Cognitive multi-agent chemistry reasoning system.<br>• Integrates retrieval, validation, and synthesis agents.<br>• <strong>Key Features:</strong><br>- Fact-checking and reasoning pipelines.<br>- Optimized vector search with SentenceTransformers.<br>- Includes a Multi-Agent Joke Generator and Reviewer bot.`,
-                sources: ['GitHub: ChemIntelliGraph', 'RAG', 'ChromaDB']
-            };
-        }
-        if (q.includes('rag lab') || q.includes('chemixtry')) {
-            return {
-                text: `<strong>⚗️ Chemixtry RAG Lab – Virtual Lab</strong><br><br><strong>Tech Stack:</strong> Streamlit, SentenceTransformers, RAG, Python<br><br>• Interactive multimodal RAG lab for chemistry experiments.<br>• Conceptual learning with structured vector knowledge base.<br>• Semantic search capabilities for experiment data.`,
-                sources: ['GitHub: Rag lab', 'Virtual Lab', 'Multimodal AI']
-            };
-        }
-        if (q.includes('timeline') || q.includes('year') || (q.includes('experience') && q.includes('when'))) {
-            return {
-                text: `<strong>📊 Career Timeline</strong><br><br><strong style="color: var(--accent-primary)">2024 - Present</strong><br><strong>🚀 Project Engineer - AIML</strong><br>📍 CDAC<br>• PostgreSQL Bug Identification & C++ Code Changes<br>• Open-source contributions<br><br><strong style="color: var(--accent-primary)">2023 - 2024</strong><br><strong>🤖 Junior Research Assistant</strong><br>📍 IIT Hyderabad (TiHAN)<br>• Deployed 15 YOLO models on Qualcomm RB5<br>• Edge AI on Jetson Nano<br><br><strong style="color: var(--accent-primary)">2022 - 2023</strong><br><strong>💻 Software Developer Trainee</strong><br>📍 KKMSoft<br>• Full-stack development with ASP.NET and C#`,
-                sources: ['Career Timeline', 'IBM RAG Database']
-            };
-        }
-        if (q.includes('cdac') || q.includes('current')) {
-            return {
-                text: `<strong>🚀 Current Role: Project Engineer at CDAC</strong><br><br><strong>Organization:</strong> CDAC - Centre for Development of Advanced Computing<br><strong>Duration:</strong> Oct 2024 - Present<br><br><strong>Key Responsibilities:</strong><br>🔹 PostgreSQL Development (Bug ID, C++ changes)<br>🔹 Open Source Contributions<br>🔹 AIML Integration`,
-                sources: ['CDAC Experience', 'IBM RAG Context']
-            };
-        }
-        if (q.includes('iit') || q.includes('hyderabad')) {
-            return {
-                text: `<strong>🤖 IIT Hyderabad Experience (2023-2024)</strong><br><br><strong>Position:</strong> Junior Research Assistant Fellow<br><strong>Projects:</strong><br>1️⃣ <strong>Qualcomm RB5:</strong> 15 YOLO models, Intrusion detection<br>2️⃣ <strong>Jetson Nano:</strong> Pothole & vehicle detection<br>3️⃣ <strong>Edge Data Centre:</strong> Docker & Kubernetes orchestration`,
-                sources: ['IIT Hyderabad', 'Computer Vision', 'Edge AI']
-            };
-        }
-        if (q.includes('skill') || q.includes('technical')) {
-            return {
-                text: `<strong>💻 Technical Skills</strong><br><br><strong>🤖 AI/ML:</strong> TensorFlow, PyTorch, OpenCV, YOLO, LangGraph, RAG<br><strong>🐳 DevOps:</strong> Docker, Kubernetes, CI/CD, OCI<br><strong>🗄️ Database:</strong> PostgreSQL, Oracle, MSSQL<br><strong>⚙️ Languages:</strong> Python, C++, C#, Java, SQL`,
-                sources: ['Technical Skills', 'IBM RAG Analysis']
-            };
-        }
-        if (q.includes('certif')) {
-            return {
-                text: `<strong>🏆 Certifications</strong><br><br>✅ Oracle Cloud Infrastructure 2024 Generative AI Professional<br>✅ OpenCV Tensor KerasFlow Bootcamp<br>✅ NVIDIA AI on Jetson Nano<br>✅ Docker and Kubernetes - Udemy`,
-                sources: ['Certifications', 'IBM RAG']
-            };
+        function askQuestion(question) {
+            document.getElementById('userInput').value = question;
+            sendMessage();
         }
 
-        return {
-            text: `<strong>👋 Hello! I'm the AI Assistant for Blessy's Portfolio</strong><br><br>I can help you explore:<br><br>📊 <strong>Experience:</strong> CDAC, IIT Hyderabad<br>🎮 <strong>Projects:</strong> DSA Quest, ChemIntelliGraph<br>💻 <strong>Skills:</strong> AI/ML, DevOps, PostgreSQL<br>🏆 <strong>Certifications:</strong> Oracle, NVIDIA<br><br><strong>💡 Try asking:</strong><br>• "Tell me about DSA Quest"<br>• "What are Blessy's skills?"`,
-            sources: ['AI Portfolio Assistant', 'IBM RAG Engine']
-        };
-    }
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
 
-    const textarea = document.getElementById('userInput');
-    textarea.addEventListener('input', function () { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 150) + 'px'; });
-</script>
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            if (welcomeScreen) {
+                welcomeScreen.remove();
+            }
+
+            addMessage(question, 'user');
+            input.value = '';
+            input.style.height = 'auto';
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                const answer = generateAnswer(question);
+                addMessage(answer.text, 'ai', answer.sources);
+            }, 1200 + Math.random() * 800);
+        }
+
+        function addMessage(text, type, sources = []) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            
+            const avatar = type === 'user' ? 
+                '<div class="avatar user-avatar">YOU</div>' : 
+                '<div class="avatar ai-avatar">AI</div>';
+            
+            const sourcesHTML = sources.length > 0 ? `
+                <div class="sources">
+                    <h4>📚 Data Sources</h4>
+                    <div class="source-tags">
+                        ${sources.map(s => `<span class="source-tag">${s}</span>`).join('')}
+                    </div>
+                </div>
+            ` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    ${avatar}
+                    <strong>${type === 'user' ? 'You' : 'AI Assistant'}</strong>
+                </div>
+                <div class="message-content">
+                    ${text}
+                    ${sourcesHTML}
+                </div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'message ai-message';
+            typingDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="avatar ai-avatar">AI</div>
+                    <strong>AI Assistant</strong>
+                </div>
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function generateAnswer(question) {
+            const q = question.toLowerCase();
+            
+            // Timeline/Year-wise experience
+            if (q.includes('timeline') || q.includes('year') || (q.includes('experience') && q.includes('when'))) {
+                return {
+                    text: `<strong>📊 Career Timeline (Year-wise)</strong><br><br>
+                    
+                    <strong style="color: var(--accent-primary)">2024 - Present</strong><br>
+                    <strong>🚀 Project Engineer - AIML, Data and Analytics</strong><br>
+                    📍 CDAC (Centre for Development of Advanced Computing)<br>
+                    • PostgreSQL Bug Identification & C++ Code Changes<br>
+                    • Open-source contributions to PostgreSQL logical replication<br>
+                    • Database management and optimization<br><br>
+                    
+                    <strong style="color: var(--accent-primary)">2023 - 2024</strong><br>
+                    <strong>🤖 Junior Research Assistant Fellow</strong><br>
+                    📍 IIT Hyderabad (TiHAN - Technology Innovation Hub)<br>
+                    • Deployed 15 YOLO models on Qualcomm RB5 Robotics Platform<br>
+                    • Computer Vision: Intrusion detection, object tracking, heatmaps<br>
+                    • Edge AI on Jetson Nano: Pothole & vehicle detection<br>
+                    • Docker & Kubernetes orchestration for Edge Data Centre<br><br>
+                    
+                    <strong style="color: var(--accent-primary)">2022 - 2023</strong><br>
+                    <strong>💻 Software Developer Trainee</strong><br>
+                    📍 KKMSoft & DDUGKY - Trivandrum<br>
+                    • Full-stack development with ASP.NET and C#<br>
+                    • Built TripzyGO travel planning webapp<br>
+                    • MSSQL database design and 3-tier architecture<br><br>
+                    
+                    <strong style="color: var(--accent-primary)">2018 - 2022</strong><br>
+                    <strong>🎓 Bachelor of Technology - ECE</strong><br>
+                    📍 Central University of Karnataka<br>
+                    • CGPA: 8.94<br>
+                    • IEEE Outstanding Student Volunteer (2022, 2018)<br>
+                    • NPTEL SWAYAM Top 5% Scorer<br>
+                    • IEEE EXECOM Creative Team Lead`,
+                    sources: ['Career Timeline', 'Professional Experience', 'IBM RAG Database', 'N8N Processed']
+                };
+            }
+            
+            // Current role - CDAC
+            if (q.includes('current') || q.includes('cdac') || q.includes('now')) {
+                return {
+                    text: `<strong>🚀 Current Role: Project Engineer at CDAC</strong><br><br>
+                    
+                    <strong>Organization:</strong> CDAC - Centre for Development of Advanced Computing<br>
+                    <strong>Position:</strong> Project Engineer - AIML, Data and Analytics<br>
+                    <strong>Duration:</strong> October 1, 2024 - Present<br>
+                    <strong>Year:</strong> 2024<br><br>
+                    
+                    <strong>Key Responsibilities:</strong><br>
+                    🔹 <strong>PostgreSQL Development:</strong> Working on bug identification and resolution in PostgreSQL codebase<br>
+                    🔹 <strong>C++ Programming:</strong> Implementing code changes and optimizations<br>
+                    🔹 <strong>Open Source Contributions:</strong> Submitting patches for logical replication feature to PostgreSQL community<br>
+                    🔹 <strong>Database Management:</strong> Optimizing queries and improving database performance<br>
+                    🔹 <strong>AIML Integration:</strong> Working on AI/ML applications with data analytics<br><br>
+                    
+                    <strong>Tech Stack:</strong> C++, PostgreSQL, SQL, Data Analytics, AIML`,
+                    sources: ['CDAC Experience 2024', 'Current Employment', 'IBM RAG Context']
+                };
+            }
+            
+            // IIT Hyderabad
+            if (q.includes('iit') || q.includes('hyderabad') || q.includes('tihan')) {
+                return {
+                    text: `<strong>🤖 IIT Hyderabad Experience (2023-2024)</strong><br><br>
+                    
+                    <strong>Position:</strong> Junior Research Assistant Fellow<br>
+                    <strong>Organization:</strong> IIT Hyderabad - TiHAN (Technology Innovation Hub on Autonomous Navigation)<br>
+                    <strong>Duration:</strong> October 29, 2023 - August 26, 2024<br>
+                    <strong>Year:</strong> 2023-2024<br><br>
+                    
+                    <strong>🔬 Major Projects:</strong><br><br>
+                    
+                    <strong>1️⃣ Qualcomm RB5 Robotics Platform</strong><br>
+                    • Deployed <strong>15 YOLO models</strong> for performance benchmarking<br>
+                    • Intrusion detection with person detection algorithms<br>
+                    • Multi-class object detection with ByteTrack tracking<br>
+                    • Custom object detection for road-works signs<br>
+                    • Drowsiness detection system<br>
+                    • Heatmaps for crowded lane analysis<br>
+                    • Depth camera integration with GStreamer<br><br>
+                    
+                    <strong>2️⃣ Jetson Nano & CV2X Projects</strong><br>
+                    • Pothole detection for autonomous driving<br>
+                    • Custom vehicle detection for Indian roads (autos, trucks, bikes, cars)<br>
+                    • Pedestrian detection in regions of interest<br>
+                    • Weather monitoring with IoT integration<br><br>
+                    
+                    <strong>3️⃣ Edge Data Centre</strong><br>
+                    • Docker container orchestration with Kubernetes<br>
+                    • CPU and GPU-enabled pod deployment<br>
+                    • Resource allocation using Vagrant & Oracle VirtualBox<br>
+                    • Minikube cluster management<br><br>
+                    
+                    <strong>Technologies:</strong> OpenCV, TensorFlow, PyTorch, YOLO, Docker, Kubernetes, Qualcomm Neural SDK`,
+                    sources: ['IIT Hyderabad 2023-2024', 'Computer Vision Projects', 'Edge AI', 'N8N Workflow']
+                };
+            }
+            
+            // KKMSoft
+            if (q.includes('kkm') || q.includes('software developer trainee') || (q.includes('2022') && q.includes('2023'))) {
+                return {
+                    text: `<strong>💻 KKMSoft Experience (2022-2023)</strong><br><br>
+                    
+                    <strong>Position:</strong> Software Developer Trainee<br>
+                    <strong>Organization:</strong> KKMSoft & DDUGKY - Trivandrum<br>
+                    <strong>Duration:</strong> December 2022 - August 2023<br>
+                    <strong>Year:</strong> 2022-2023<br><br>
+                    
+                    <strong>🌐 Key Project: TripzyGO Webapp</strong><br>
+                    • Full-stack travel planning web application<br>
+                    • Built using <strong>ASP.NET Framework</strong> with <strong>C#</strong><br>
+                    • MSSQL database design and management<br>
+                    • Implemented 3-tier architecture (Presentation, Business Logic, Data Access)<br>
+                    • HTML, CSS, Bootstrap for responsive frontend<br>
+                    • JavaScript for dynamic user interactions<br><br>
+                    
+                    <strong>Skills Developed:</strong><br>
+                    • Object-Oriented Programming (OOPS) with C#<br>
+                    • .NET Framework & ASP.NET web development<br>
+                    • SQL database design and queries<br>
+                    • Front-end development with Bootstrap<br>
+                    • Version control and team collaboration`,
+                    sources: ['KKMSoft 2022-2023', 'Web Development', 'IBM RAG Database']
+                };
+            }
+            
+            // Skills
+            if (q.includes('skill') || q.includes('technical') || q.includes('technolog')) {
+                return {
+                    text: `<strong>💻 Technical Skills Portfolio</strong><br><br>
+                    
+                    <strong>🤖 AI/Machine Learning</strong><br>
+                    • TensorFlow & PyTorch for model development<br>
+                    • OpenCV for Computer Vision applications<br>
+                    • YOLO (deployed 15+ models)<br>
+                    • Qualcomm Neural SDK for edge deployment<br>
+                    • Model quantization & ONNX conversion<br><br>
+                    
+                    <strong>🐳 DevOps & Cloud</strong><br>
+                    • Docker containerization<br>
+                    • Kubernetes orchestration<br>
+                    • CI/CD pipeline automation<br>
+                    • Oracle Cloud Infrastructure<br>
+                    • N8N workflow automation<br><br>
+                    
+                    <strong>🗄️ Database Management</strong><br>
+                    • PostgreSQL (current focus)<br>
+                    • Oracle Database<br>
+                    • Microsoft SQL Server<br>
+                    • SQL query optimization<br><br>
+                    
+                    <strong>⚙️ Programming Languages</strong><br>
+                    • C++ (PostgreSQL contributions)<br>
+                    • Python (AI/ML projects)<br>
+                    • C# (ASP.NET development)<br>
+                    • Java (OOP applications)<br>
+                    • JavaScript (web development)<br><br>
+                    
+                    <strong>🌐 Web Development</strong><br>
+                    • ASP.NET Framework<br>
+                    • HTML5, CSS3, Bootstrap<br>
+                    • .NET Framework<br>
+                    • 3-tier architecture design`,
+                    sources: ['Technical Skills', 'IBM RAG Analysis', 'N8N Automation']
+                };
+            }
+            
+            // Certifications
+            if (q.includes('certif') || q.includes('credential')) {
+                return {
+                    text: `<strong>🏆 Professional Certifications</strong><br><br>
+                    
+                    <strong>☁️ Oracle Cloud & AI</strong><br>
+                    ✅ Oracle Cloud Infrastructure 2024 Generative AI Professional<br>
+                    ✅ Oracle Autonomous Database Cloud 2023<br>
+                    ✅ Oracle Cloud Infrastructure 2023 Foundations<br>
+                    ✅ Oracle Cloud Data Management 2023<br><br>
+                    
+                    <strong>🤖 AI & Computer Vision</strong><br>
+                    ✅ OpenCV Tensor KerasFlow Bootcamp<br>
+                    ✅ NVIDIA Getting Started with AI on Jetson Nano<br>
+                    ✅ NVIDIA Video AI Applications at the Edge<br><br>
+                    
+                    <strong>🐳 DevOps & Containers</strong><br>
+                    ✅ Docker and Kubernetes - Udemy<br><br>
+                    
+                    <strong>📊 Analytics</strong><br>
+                    ✅ Advanced Google Analytics<br><br>
+                    
+                    <strong>Total Certifications:</strong> 9+ professional certifications<br>
+                    <strong>Focus Areas:</strong> Generative AI, Cloud Infrastructure, Computer Vision, DevOps`,
+                    sources: ['Certifications', 'Oracle University', 'NVIDIA Academy', 'IBM RAG']
+                };
+            }
+            
+            // AI Projects
+            if (q.includes('ai project') || q.includes('computer vision') || q.includes('cv')) {
+                return {
+                    text: `<strong>🤖 AI & Computer Vision Projects</strong><br><br>
+                    
+                    <strong>🎯 Qualcomm RB5 Platform (2023-2024)</strong><br>
+                    • <strong>15 YOLO Models Deployment:</strong> Benchmarked YOLOv5, YOLOv7, YOLOv8 variants<br>
+                    • <strong>Intrusion Detection:</strong> Person detection algorithms with alert systems<br>
+                    • <strong>Multi-Class Object Detection:</strong> 80+ class detection with ByteTrack<br>
+                    • <strong>Custom Object Detection:</strong> Road-works sign detection for Indian roads<br>
+                    • <strong>Drowsiness Detection:</strong> Eye aspect ratio and head pose estimation<br>
+                    • <strong>Heatmap Analysis:</strong> Crowded lane detection and visualization<br>
+                    • <strong>Depth Integration:</strong> GStreamer pipeline with depth cameras<br><br>
+                    
+                    <strong>🚗 Jetson Nano Projects (2023-2024)</strong><br>
+                    • <strong>Pothole Detection:</strong> Custom trained model for autonomous driving<br>
+                    • <strong>Vehicle Detection:</strong> Indian vehicle classification (auto, truck, bike, car)<br>
+                    • <strong>Pedestrian Detection:</strong> ROI-based pedestrian tracking<br>
+                    • <strong>Weather Monitoring:</strong> IoT sensor integration with CV<br><br>
+                    
+                    <strong>🛠️ Tech Stack</strong><br>
+                    • Frameworks: TensorFlow, PyTorch, OpenCV<br>
+                    • Deployment: Qualcomm Neural SDK, ONNX, TensorRT<br>
+                    • Languages: Python, C++<br>
+                    • Edge Devices: Qualcomm RB5, Jetson Nano`,
+                    sources: ['Computer Vision Projects', 'Edge AI', 'IIT Hyderabad', 'N8N Workflow']
+                };
+            }
+            
+            // Docker & Kubernetes
+            if (q.includes('docker') || q.includes('kubernetes') || q.includes('devops')) {
+                return {
+                    text: `<strong>🐳 Docker & Kubernetes Experience</strong><br><br>
+                    
+                    <strong>📦 Project: Edge Data Centre (IIT Hyderabad 2023-2024)</strong><br><br>
+                    
+                    <strong>Docker Implementation:</strong><br>
+                    • Containerized multimedia software stack<br>
+                    • Multi-stage builds for optimized images<br>
+                    • Docker Compose for multi-container applications<br>
+                    • Custom Dockerfiles for CV applications<br>
+                    • Volume management for persistent data<br><br>
+                    
+                    <strong>Kubernetes Orchestration:</strong><br>
+                    • Deployed CPU and GPU-enabled pods<br>
+                    • Minikube for local cluster development<br>
+                    • Resource allocation and scaling<br>
+                    • ConfigMaps and Secrets management<br>
+                    • Service discovery and load balancing<br><br>
+                    
+                    <strong>GPU Resource Management:</strong><br>
+                    • Vagrant for VM provisioning<br>
+                    • Oracle VirtualBox integration<br>
+                    • GPU passthrough configuration<br>
+                    • Resource optimization for ML workloads<br><br>
+                    
+                    <strong>Certification:</strong> Docker and Kubernetes - Udemy<br>
+                    <strong>Impact:</strong> Enhanced performance and scalability of edge AI applications`,
+                    sources: ['DevOps Experience', 'Edge Data Centre', 'Kubernetes', 'IBM RAG']
+                };
+            }
+            
+            // Education
+            if (q.includes('educat') || q.includes('degree') || q.includes('university') || q.includes('graduat')) {
+                return {
+                    text: `<strong>🎓 Educational Background</strong><br><br>
+                    
+                    <strong>Bachelor of Technology (B.Tech)</strong><br>
+                    • <strong>Specialization:</strong> Electronics & Communication Engineering (ECE)<br>
+                    • <strong>University:</strong> Central University of Karnataka (CUK)<br>
+                    • <strong>Duration:</strong> 2018 - 2022<br>
+                    • <strong>CGPA:</strong> <strong>8.94 / 10</strong><br>
+                    • <strong>Graduation Year:</strong> 2022<br><br>
+                    
+                    <strong>🏆 Academic Achievements:</strong><br>
+                    • IEEE Outstanding Student Volunteer Award (2022, 2018)<br>
+                    • NPTEL SWAYAM Top 5% Scorer (2022)<br>
+                    • 5 Elite-Silver NPTEL Certifications<br>
+                    • IEEE EXECOM Creative Team Lead (2022)<br>
+                    • Arduino Hackathon Runner Up (2018)<br><br>
+                    
+                    <strong>📚 Higher Secondary Education</strong><br>
+                    • Ideal Pre-University College, Karnataka (2015-2017)<br>
+                    • Score: <strong>93.3%</strong><br><br>
+                    
+                    <strong>📖 Matriculation (CBSE)</strong><br>
+                    • School of Brilliants, Maharashtra (2014-2015)<br>
+                    • CGPA: <strong>10.0 / 10</strong><br>
+                    • Top 5 in District`,
+                    sources: ['Education Background', 'Academic Records', 'IBM RAG Database']
+                };
+            }
+            
+            // Contact
+            if (q.includes('contact') || q.includes('reach') || q.includes('email') || q.includes('phone')) {
+                return {
+                    text: `<strong>📞 Contact Information</strong><br><br>
+                    
+                    <strong>📧 Email:</strong><br>
+                    <a href="mailto:blessy456bthomas@gmail.com" style="color: var(--accent-primary)">blessy456bthomas@gmail.com</a><br><br>
+                    
+                    <strong>📱 Phone:</strong><br>
+                    <a href="tel:945-250-6703" style="color: var(--accent-primary)">+91 945-250-6703</a><br><br>
+                    
+                    <strong>💼 LinkedIn:</strong><br>
+                    <a href="https://linkedin.com/in/blessythomas456b" target="_blank" style="color: var(--accent-primary)">linkedin.com/in/blessythomas456b</a><br><br>
+                    
+                    <strong>💻 GitHub:</strong><br>
+                    <a href="https://github.com/Blessy456b" target="_blank" style="color: var(--accent-primary)">github.com/Blessy456b</a><br><br>
+                    
+                    <strong>🌍 Location:</strong> India<br>
+                    <strong>🕐 Availability:</strong> Open to opportunities<br><br>
+                    
+                    Feel free to connect on any platform! 🚀`,
+                    sources: ['Contact Information', 'Professional Network']
+                };
+            }
+            
+            // Default
+            return {
+                text: `<strong>👋 Hello! I'm the AI Assistant for Blessy's Portfolio</strong><br><br>
+                
+                I can help you explore:<br><br>
+                
+                📊 <strong>Experience Timeline:</strong> Year-wise breakdown (2024, 2023-2024, 2022-2023)<br>
+                💻 <strong>Technical Skills:</strong> AI/ML, DevOps, Database, Programming<br>
+                🤖 <strong>AI Projects:</strong> Computer Vision on Qualcomm RB5, Jetson Nano<br>
+                🐳 <strong>DevOps:</strong> Docker, Kubernetes, Edge computing<br>
+                🏆 <strong>Certifications:</strong> Oracle, NVIDIA, OpenCV (9+ certs)<br>
+                🎓 <strong>Education:</strong> B.Tech ECE (CGPA 8.94)<br>
+                📞 <strong>Contact:</strong> Email, LinkedIn, GitHub<br><br>
+                
+                <strong>💡 Try asking:</strong><br>
+                • "Show me the experience timeline year-wise"<br>
+                • "What AI projects has Blessy worked on?"<br>
+                • "Tell me about Docker and Kubernetes experience"<br>
+                • "What certifications does Blessy have?"<br><br>
+                
+                <strong>🔄 Powered by:</strong> IBM RAG Architecture + N8N Automation Workflow`,
+                sources: ['AI Portfolio Assistant', 'IBM RAG Engine', 'N8N Automation']
+            };
+        }
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('userInput');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+    </script>
 </body>
-
 </html>
